@@ -666,6 +666,11 @@ p {
         gap: 2rem;
     }
 
+    /* Hide butterfly on mobile for cleaner look */
+    .hero-image {
+        display: none;
+    }
+
     .hero-title {
         font-size: 2.5rem;
     }
