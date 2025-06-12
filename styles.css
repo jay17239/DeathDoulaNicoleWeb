@@ -468,9 +468,17 @@ p {
 }
 
 .faq-answer {
-    padding: 0 2rem 2rem;
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 2rem;
     color: var(--muted-text);
     line-height: 1.6;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+.faq-item.active .faq-answer {
+    max-height: 500px;
+    padding: 0 2rem 2rem;
 }
 
 .faq-item.active .faq-icon {
