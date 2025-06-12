@@ -1,0 +1,35 @@
+{
+  "name": "death-doula-nicole-website",
+  "version": "1.0.0",
+  "description": "Professional death doula website with warm, compassionate design for Nicole's end-of-life support services in Northeast Ohio",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 3000 || python3 -m http.server 3000 || npx serve .",
+    "build": "echo 'Static site - no build required'",
+    "start": "npx serve ."
+  },
+  "keywords": [
+    "death-doula",
+    "end-of-life-care",
+    "northeast-ohio",
+    "compassionate-care",
+    "doula-services",
+    "website"
+  ],
+  "author": "Nicole - Death Doula",
+  "license": "MIT",
+  "homepage": "https://github.com/jay17239/DeathDoulaNicoleWeb#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jay17239/DeathDoulaNicoleWeb.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jay17239/DeathDoulaNicoleWeb/issues"
+  },
+  "devDependencies": {
+    "serve": "^14.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+} 
