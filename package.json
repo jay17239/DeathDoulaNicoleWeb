@@ -4,8 +4,8 @@
   "description": "Professional death doula website with warm, compassionate design for Nicole's end-of-life support services in Northeast Ohio",
   "main": "index.html",
   "scripts": {
-    "dev": "python -m http.server 3000 || python3 -m http.server 3000 || npx serve .",
-    "build": "echo 'Static site - no build required'",
+    "dev": "tinacms dev -c \"python -m http.server 3000 || python3 -m http.server 3000 || npx serve .\"",
+    "build": "tinacms build && echo 'Static site built'",
     "start": "npx serve ."
   },
   "keywords": [
@@ -27,9 +27,14 @@
     "url": "https://github.com/jay17239/DeathDoulaNicoleWeb/issues"
   },
   "devDependencies": {
-    "serve": "^14.0.0"
+    "serve": "^14.0.0",
+    "@tinacms/cli": "^1.5.39",
+    "tinacms": "^1.5.39"
+  },
+  "dependencies": {
+    "@tinacms/datalayer": "^1.2.35"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   }
 } 

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Admin - Death Doula Nicole</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .admin-header {
+            background: #7A4C2B;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .admin-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+        
+        .admin-nav button {
+            padding: 10px 20px;
+            background: #7A4C2B;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .admin-nav button:hover,
+        .admin-nav button.active {
+            background: #5a3821;
+        }
+        
+        .admin-section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #7A4C2B;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #7A4C2B;
+        }
+        
+        .form-group textarea {
+            height: 200px;
+            resize: vertical;
+        }
+        
+        .form-group textarea.large {
+            height: 400px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            background: #7A4C2B;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+            margin-right: 10px;
+        }
+        
+        .btn:hover {
+            background: #5a3821;
+        }
+        
+        .btn.danger {
+            background: #e74c3c;
+        }
+        
+        .btn.danger:hover {
+            background: #c0392b;
+        }
+        
+        .posts-list {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .post-item {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #7A4C2B;
+        }
+        
+        .post-item h3 {
+            color: #7A4C2B;
+            margin-bottom: 10px;
+        }
+        
+        .post-meta {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .post-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .markdown-help {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        
+        .markdown-help h4 {
+            margin-bottom: 10px;
+            color: #7A4C2B;
+        }
+        
+        .markdown-help code {
+            background: #fff;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>Blog Administration</h1>
+            <p>Welcome, Nicole! Manage your blog posts here.</p>
+        </div>
+
+        <div class="admin-nav">
+            <button onclick="showSection('posts-list')" class="active" id="posts-btn">Manage Posts</button>
+            <button onclick="showSection('new-post')" id="new-btn">New Post</button>
+            <button onclick="goHome()">Back to Website</button>
+        </div>
+
+        <!-- Posts List Section -->
+        <div id="posts-list" class="admin-section">
+            <h2>Your Blog Posts</h2>
+            <div id="posts-container">
+                <!-- Posts will be loaded here -->
+            </div>
+        </div>
+
+        <!-- New/Edit Post Section -->
+        <div id="new-post" class="admin-section hidden">
+            <h2 id="form-title">Create New Post</h2>
+            
+            <div id="message-container"></div>
+            
+            <form id="post-form">
+                <div class="form-group">
+                    <label for="title">Title *</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="excerpt">Excerpt *</label>
+                    <textarea id="excerpt" name="excerpt" required placeholder="A brief summary of your blog post..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" name="category">
+                        <option value="Personal Reflections">Personal Reflections</option>
+                        <option value="Professional Insights">Professional Insights</option>
+                        <option value="End-of-Life Care">End-of-Life Care</option>
+                        <option value="Family Support">Family Support</option>
+                        <option value="Grief & Loss">Grief & Loss</option>
+                        <option value="Resources">Resources</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="featuredImage">Featured Image URL (optional)</label>
+                    <input type="url" id="featuredImage" name="featuredImage" placeholder="https://example.com/image.jpg">
+                </div>
+                
+                <div class="form-group">
+                    <label for="published">
+                        <input type="checkbox" id="published" name="published" checked>
+                        Publish immediately
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label for="content">Content *</label>
+                    <textarea id="content" name="content" class="large" required placeholder="Write your blog post content here..."></textarea>
+                    
+                    <div class="markdown-help">
+                        <h4>Formatting Help:</h4>
+                        <p>Use these simple formatting options:</p>
+                        <ul>
+                            <li><code># Heading</code> for main headings</li>
+                            <li><code>## Subheading</code> for subheadings</li>
+                            <li><code>**bold text**</code> for bold text</li>
+                            <li><code>*italic text*</code> for italic text</li>
+                            <li><code>- List item</code> for bullet points</li>
+                            <li>Leave a blank line between paragraphs</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn">Save Post</button>
+                    <button type="button" class="btn" onclick="showSection('posts-list')">Cancel</button>
+                    <button type="button" class="btn danger hidden" id="delete-btn" onclick="deletePost()">Delete Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentPosts = [];
+        let editingPostId = null;
+
+        // Load posts on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPosts();
+        });
+
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.admin-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Remove active class from all nav buttons
+            document.querySelectorAll('.admin-nav button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.remove('hidden');
+            
+            // Add active class to corresponding button
+            if (sectionId === 'posts-list') {
+                document.getElementById('posts-btn').classList.add('active');
+            } else if (sectionId === 'new-post') {
+                document.getElementById('new-btn').classList.add('active');
+                resetForm();
+            }
+        }
+
+        async function loadPosts() {
+            try {
+                const response = await fetch('./blog-data.json');
+                currentPosts = (await response.json()).posts;
+                displayPosts();
+            } catch (error) {
+                console.error('Error loading posts:', error);
+                currentPosts = [];
+                displayPosts();
+            }
+        }
+
+        function displayPosts() {
+            const container = document.getElementById('posts-container');
+            
+            if (currentPosts.length === 0) {
+                container.innerHTML = '<p>No blog posts yet. <a href="#" onclick="showSection(\'new-post\')">Create your first post!</a></p>';
+                return;
+            }
+
+            // Sort posts by date (newest first)
+            const sortedPosts = [...currentPosts].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            container.innerHTML = sortedPosts.map(post => {
+                const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+
+                return `
+                    <div class="post-item">
+                        <h3>${post.title}</h3>
+                        <div class="post-meta">
+                            ${formattedDate} • ${post.category} • ${post.published ? 'Published' : 'Draft'}
+                        </div>
+                        <p>${post.excerpt}</p>
+                        <div class="post-actions">
+                            <button class="btn" onclick="editPost('${post.id}')">Edit</button>
+                            <button class="btn danger" onclick="confirmDeletePost('${post.id}')">Delete</button>
+                            ${post.published ? `<a href="?post=${post.id}" target="_blank" class="btn">View Live</a>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function resetForm() {
+            document.getElementById('post-form').reset();
+            document.getElementById('form-title').textContent = 'Create New Post';
+            document.getElementById('delete-btn').classList.add('hidden');
+            document.getElementById('message-container').innerHTML = '';
+            editingPostId = null;
+        }
+
+        function editPost(postId) {
+            const post = currentPosts.find(p => p.id === postId);
+            if (!post) return;
+
+            // Fill form with post data
+            document.getElementById('title').value = post.title;
+            document.getElementById('excerpt').value = post.excerpt;
+            document.getElementById('category').value = post.category;
+            document.getElementById('featuredImage').value = post.featuredImage || '';
+            document.getElementById('published').checked = post.published;
+            document.getElementById('content').value = post.content;
+
+            // Update UI
+            document.getElementById('form-title').textContent = 'Edit Post';
+            document.getElementById('delete-btn').classList.remove('hidden');
+            editingPostId = postId;
+
+            showSection('new-post');
+        }
+
+        function generatePostId(title) {
+            const date = new Date();
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const slug = title
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+            return `${year}-${month}-${day}-${slug}`;
+        }
+
+        document.getElementById('post-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            savePost();
+        });
+
+        function savePost() {
+            const formData = new FormData(document.getElementById('post-form'));
+            const postData = {
+                title: formData.get('title'),
+                excerpt: formData.get('excerpt'),
+                content: formData.get('content'),
+                category: formData.get('category'),
+                featuredImage: formData.get('featuredImage') || '',
+                published: formData.has('published'),
+                author: 'Nicole',
+                date: editingPostId ? currentPosts.find(p => p.id === editingPostId).date : new Date().toISOString().split('T')[0]
+            };
+
+            if (editingPostId) {
+                // Update existing post
+                const postIndex = currentPosts.findIndex(p => p.id === editingPostId);
+                currentPosts[postIndex] = { ...postData, id: editingPostId };
+            } else {
+                // Create new post
+                postData.id = generatePostId(postData.title);
+                currentPosts.push(postData);
+            }
+
+            // Generate the updated JSON
+            const updatedJson = JSON.stringify({ posts: currentPosts }, null, 2);
+            
+            showMessage('success', `Post ${editingPostId ? 'updated' : 'created'} successfully! Copy the JSON below and update your blog-data.json file:`);
+            
+            // Show the JSON for copying
+            const container = document.getElementById('message-container');
+            container.innerHTML += `
+                <div style="margin-top: 20px;">
+                    <h4>Updated blog-data.json content:</h4>
+                    <textarea style="width: 100%; height: 200px; font-family: monospace; font-size: 12px;" readonly>${updatedJson}</textarea>
+                    <p><strong>Instructions:</strong> Copy the content above and paste it into your blog-data.json file, then commit and push to GitHub.</p>
+                </div>
+            `;
+
+            displayPosts();
+        }
+
+        function confirmDeletePost(postId) {
+            const post = currentPosts.find(p => p.id === postId);
+            if (confirm(`Are you sure you want to delete "${post.title}"? This action cannot be undone.`)) {
+                currentPosts = currentPosts.filter(p => p.id !== postId);
+                
+                const updatedJson = JSON.stringify({ posts: currentPosts }, null, 2);
+                showMessage('success', 'Post deleted successfully! Copy the JSON below and update your blog-data.json file:');
+                
+                const container = document.getElementById('message-container');
+                container.innerHTML += `
+                    <div style="margin-top: 20px;">
+                        <h4>Updated blog-data.json content:</h4>
+                        <textarea style="width: 100%; height: 200px; font-family: monospace; font-size: 12px;" readonly>${updatedJson}</textarea>
+                        <p><strong>Instructions:</strong> Copy the content above and paste it into your blog-data.json file, then commit and push to GitHub.</p>
+                    </div>
+                `;
+                
+                displayPosts();
+                showSection('posts-list');
+            }
+        }
+
+        function deletePost() {
+            if (editingPostId) {
+                confirmDeletePost(editingPostId);
+            }
+        }
+
+        function showMessage(type, message) {
+            const container = document.getElementById('message-container');
+            container.innerHTML = `
+                <div class="${type}-message">
+                    ${message}
+                </div>
+            `;
+        }
+
+        function goHome() {
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html> 

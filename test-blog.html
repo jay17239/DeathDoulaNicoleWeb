@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .blog-grid { display: grid; gap: 20px; }
+        .blog-card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; }
+        .blog-meta { margin-top: 10px; }
+        .blog-category { background: #7A4C2B; color: white; padding: 4px 8px; border-radius: 12px; font-size: 12px; }
+        .read-more-btn { display: inline-block; margin-top: 10px; padding: 8px 16px; background: #7A4C2B; color: white; text-decoration: none; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>Blog Test Page</h1>
+    <p>This page tests if the blog loading functionality works.</p>
+    
+    <div class="blog-grid">
+        <div class="blog-card">
+            <div>Initial Content - Should be replaced</div>
+        </div>
+    </div>
+
+    <script>
+        // Blog functionality test
+        async function loadBlogPosts() {
+            console.log('TEST: Loading blog posts...');
+            try {
+                const response = await fetch('./blog-data.json');
+                console.log('TEST: Response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const blogData = await response.json();
+                console.log('TEST: Blog data loaded:', blogData);
+                
+                const publishedPosts = blogData.posts.filter(post => post.published);
+                console.log('TEST: Published posts:', publishedPosts);
+                
+                displayBlogPosts(publishedPosts);
+            } catch (error) {
+                console.error('TEST: Error loading blog posts:', error);
+                console.log('TEST: Keeping default content due to error');
+            }
+        }
+        
+        function displayBlogPosts(posts) {
+            console.log('TEST: Displaying blog posts:', posts);
+            const blogGrid = document.querySelector('.blog-grid');
+            
+            if (!blogGrid) {
+                console.error('TEST: Blog grid element not found!');
+                return;
+            }
+            
+            console.log('TEST: Blog grid element found:', blogGrid);
+            
+            // Sort posts by date (newest first)
+            posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // Display only the 3 most recent posts on the main page
+            const recentPosts = posts.slice(0, 3);
+            console.log('TEST: Recent posts to display:', recentPosts);
+            
+            blogGrid.innerHTML = recentPosts.map(post => {
+                const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                return `
+                    <div class="blog-card">
+                        <div class="blog-image-placeholder">${post.featuredImage ? `<img src="${post.featuredImage}" alt="${post.title}">` : 'Blog Post'}</div>
+                        <div class="blog-content">
+                            <h3><a href="?post=${post.id}" class="blog-title-link">${post.title}</a></h3>
+                            <p class="blog-excerpt">${post.excerpt}</p>
+                            <div class="blog-meta">
+                                <span class="blog-date">${formattedDate}</span>
+                                <span class="blog-category">${post.category}</span>
+                            </div>
+                            <a href="?post=${post.id}" class="read-more-btn">Read More</a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            console.log('TEST: Blog grid updated successfully');
+        }
+
+        // Load blog posts when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('TEST: DOM loaded, starting blog load...');
+            loadBlogPosts();
+        });
+    </script>
+</body>
+</html> 
