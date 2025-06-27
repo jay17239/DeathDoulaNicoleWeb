@@ -1,6 +1,7 @@
 {
   "name": "death-doula-nicole-website",
   "version": "1.0.0",
+  "type": "module",
   "description": "Professional death doula website with warm, compassionate design for Nicole's end-of-life support services in Northeast Ohio",
   "main": "index.html",
   "scripts": {
