@@ -27,14 +27,16 @@
     "url": "https://github.com/jay17239/DeathDoulaNicoleWeb/issues"
   },
   "devDependencies": {
+    "@tinacms/cli": "^1.9.9",
     "serve": "^14.0.0",
-    "@tinacms/cli": "^1.5.39",
-    "tinacms": "^1.5.39"
+    "tinacms": "^2.1.1"
   },
   "dependencies": {
-    "@tinacms/datalayer": "^1.2.35"
+    "@sanity/client": "^7.6.0",
+    "@sanity/image-url": "^1.1.0",
+    "@tinacms/datalayer": "^1.0.1"
   },
   "engines": {
     "node": ">=18.0.0"
   }
-} 
+}
