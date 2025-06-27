@@ -34,5 +34,5 @@ export default {
       title: 'Headshot Alt Text',
       description: 'Alternative text for the headshot image'
     }
-  ],
+  ]
 } 

@@ -15,4 +15,14 @@ export default defineConfig({
   schema: {
     types: schemaTypes,
   },
+
+  cors: {
+    allowCredentials: true,
+    allowOrigins: [
+      'http://localhost:3000',
+      'http://127.0.0.1:3000',
+      'https://deathdoulanicole.vercel.app',
+      'https://jay17239.github.io'
+    ]
+  }
 })

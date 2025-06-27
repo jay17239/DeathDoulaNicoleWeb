@@ -45,5 +45,5 @@ export default {
       title: 'Hero Image',
       description: 'The main image displayed in the hero section'
     }
-  ],
+  ]
 } 

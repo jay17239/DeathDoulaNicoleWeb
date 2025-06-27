@@ -1,10 +1,11 @@
-import { createClient } from '@sanity/client'
+// Import Sanity client from CDN
+import { createClient } from 'https://cdn.skypack.dev/@sanity/client'
 
 // Sanity client configuration
 export const client = createClient({
   projectId: 'gnyojf5q', // Replace with your project ID
   dataset: 'production',
-  useCdn: true, // Use CDN for faster responses
+  useCdn: true, // Use CDN for faster read operations
   apiVersion: '2024-01-01', // Use current date
 })
 

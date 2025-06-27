@@ -1,7 +1,15 @@
 // Sanity Data Initialization Script
 // Run this once to populate Sanity with current website content
 
-import { client } from './sanity-client.js';
+import { createClient } from '@sanity/client';
+
+// Initialize Sanity client with CLI authentication
+const client = createClient({
+  projectId: 'gnyojf5q',
+  dataset: 'production',
+  useCdn: false,
+  apiVersion: '2024-01-01'
+});
 
 // Initialize hero section data
 const heroData = {
