@@ -227,12 +227,13 @@ p {
     width: 280px;
     height: 280px;
     opacity: 0.9;
-    border-radius: var(--border-radius);
-    background: transparent;
-    border: none;
-    outline: none;
-    box-shadow: var(--gentle-shadow);
+    background-color: transparent !important;
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none;
     object-fit: contain;
+    display: block;
 }
 
 /* Section Headers */
