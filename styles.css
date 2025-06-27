@@ -193,7 +193,7 @@ p {
     margin: 0 auto;
     padding: var(--container-padding);
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.2fr 0.8fr;
     gap: 4rem;
     align-items: center;
 }
@@ -217,16 +217,22 @@ p {
     flex-wrap: wrap;
 }
 
-.butterfly-icon {
-    width: 300px;
-    height: 300px;
-    opacity: 0.8;
-    animation: gentle-float 6s ease-in-out infinite;
+.hero-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-@keyframes gentle-float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
+.butterfly-icon {
+    width: 280px;
+    height: 280px;
+    opacity: 0.9;
+    border-radius: var(--border-radius);
+    background: transparent;
+    border: none;
+    outline: none;
+    box-shadow: var(--gentle-shadow);
+    object-fit: contain;
 }
 
 /* Section Headers */
