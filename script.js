@@ -18,6 +18,26 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('DOM Content Loaded - Starting initialization with Sanity CMS');
     
+    // Make showHomePage globally available
+    window.showHomePage = showHomePage;
+    
+    // Make showBlogPost globally available
+    window.showBlogPost = showBlogPost;
+    
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', function(event) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const postId = urlParams.get('post');
+        
+        if (postId) {
+            // Show blog post if URL has post parameter
+            checkForBlogPost();
+        } else {
+            // Show home page if no post parameter
+            showHomePage();
+        }
+    });
+    
     // Initialize Sanity CMS content
     try {
         initializeSanityContent();
@@ -599,19 +619,40 @@ function displayBlogPosts(posts) {
             <div class="blog-card">
                 <div class="blog-image-placeholder">${post.featuredImage ? `<img src="${post.featuredImage}" alt="${post.title}">` : 'Blog Post'}</div>
                 <div class="blog-content">
-                    <h3><a href="?post=${post.id}" class="blog-title-link">${post.title}</a></h3>
+                    <h3><a href="#" onclick="showBlogPost('${post.id}')" class="blog-title-link">${post.title}</a></h3>
                     <p class="blog-excerpt">${post.excerpt}</p>
                     <div class="blog-meta">
                         <span class="blog-date">${formattedDate}</span>
                         <span class="blog-category">${post.category}</span>
                     </div>
-                    <a href="?post=${post.id}" class="read-more-btn">Read More</a>
+                    <a href="#" onclick="showBlogPost('${post.id}')" class="read-more-btn">Read More</a>
                 </div>
             </div>
         `;
     }).join('');
     
     console.log('Blog grid updated successfully');
+}
+
+// Function to show a specific blog post
+async function showBlogPost(postId) {
+    try {
+        const response = await fetch('./blog-data.json');
+        const blogData = await response.json();
+        const post = blogData.posts.find(p => p.id === postId && p.published);
+        
+        if (post) {
+            // Update URL with post parameter
+            const url = new URL(window.location);
+            url.searchParams.set('post', postId);
+            window.history.pushState({}, `${post.title} - Death Doula Nicole`, url);
+            
+            // Display the blog post
+            displaySingleBlogPost(post);
+        }
+    } catch (error) {
+        console.error('Error loading blog post:', error);
+    }
 }
 
 async function checkForBlogPost() {
@@ -640,14 +681,37 @@ function displaySingleBlogPost(post) {
         day: 'numeric'
     });
     
-    // Replace the main content with the blog post
-    const mainContent = document.querySelector('main') || document.body;
-    mainContent.innerHTML = `
+    // Hide all main page sections
+    const sectionsToHide = ['hero', 'about', 'services', 'blog', 'resources', 'faq', 'contact'];
+    sectionsToHide.forEach(sectionId => {
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.style.display = 'none';
+        }
+    });
+    
+    // Create or update blog post container
+    let blogPostContainer = document.getElementById('blog-post-container');
+    if (!blogPostContainer) {
+        blogPostContainer = document.createElement('div');
+        blogPostContainer.id = 'blog-post-container';
+        
+        // Insert after the navigation
+        const navbar = document.querySelector('.navbar');
+        if (navbar && navbar.nextSibling) {
+            navbar.parentNode.insertBefore(blogPostContainer, navbar.nextSibling);
+        } else {
+            document.body.appendChild(blogPostContainer);
+        }
+    }
+    
+    blogPostContainer.style.display = 'block';
+    blogPostContainer.innerHTML = `
         <article class="blog-post-single">
             <div class="container">
                 <div class="blog-post-header">
                     <nav class="breadcrumb">
-                        <a href="/">&larr; Back to Home</a>
+                        <a href="#" onclick="showHomePage()" class="back-home-btn">&larr; Back to Home</a>
                     </nav>
                     <h1 class="blog-post-title">${post.title}</h1>
                     <div class="blog-post-meta">
@@ -661,8 +725,8 @@ function displaySingleBlogPost(post) {
                     ${formatBlogContent(post.content)}
                 </div>
                 <div class="blog-post-footer">
-                    <a href="/" class="btn-primary">Back to Home</a>
-                    <a href="/#contact" class="btn-secondary">Get in Touch</a>
+                    <a href="#" onclick="showHomePage()" class="btn-primary">Back to Home</a>
+                    <a href="#" onclick="showHomePage(); setTimeout(() => { document.getElementById('contact').scrollIntoView({behavior: 'smooth'}); }, 100);" class="btn-secondary">Get in Touch</a>
                 </div>
             </div>
         </article>
@@ -670,6 +734,38 @@ function displaySingleBlogPost(post) {
     
     // Update page title
     document.title = `${post.title} - Death Doula Nicole`;
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Function to show the home page and hide blog post
+function showHomePage() {
+    // Hide blog post container
+    const blogPostContainer = document.getElementById('blog-post-container');
+    if (blogPostContainer) {
+        blogPostContainer.style.display = 'none';
+    }
+    
+    // Show all main page sections
+    const sectionsToShow = ['hero', 'about', 'services', 'blog', 'resources', 'faq', 'contact'];
+    sectionsToShow.forEach(sectionId => {
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.style.display = 'block';
+        }
+    });
+    
+    // Update page title
+    document.title = 'Death Doula Nicole - Compassionate End-of-Life Support | Northeast Ohio';
+    
+    // Clear URL parameters
+    const url = new URL(window.location);
+    url.searchParams.delete('post');
+    window.history.replaceState({}, document.title, url);
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function formatBlogContent(content) {
