@@ -24,6 +24,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Make showBlogPost globally available
     window.showBlogPost = showBlogPost;
     
+    // Make showSanityBlogPost globally available
+    window.showSanityBlogPost = showSanityBlogPost;
+    
     // Handle browser back/forward buttons
     window.addEventListener('popstate', function(event) {
         const urlParams = new URLSearchParams(window.location.search);
@@ -513,13 +516,13 @@ function displaySanityBlogPosts(posts) {
                     ${post.featuredImage ? `<img src="${urlFor(post.featuredImage)}" alt="${post.title}">` : 'Blog Post'}
                 </div>
                 <div class="blog-content">
-                    <h3><a href="?post=${post.slug.current}" class="blog-title-link">${post.title}</a></h3>
+                    <h3><a href="#" onclick="showSanityBlogPost('${post.slug.current}')" class="blog-title-link">${post.title}</a></h3>
                     <p class="blog-excerpt">${post.excerpt}</p>
                     <div class="blog-meta">
                         <span class="blog-date">${formattedDate}</span>
                         <span class="blog-category">${post.category}</span>
                     </div>
-                    <a href="?post=${post.slug.current}" class="read-more-btn">Read More</a>
+                    <a href="#" onclick="showSanityBlogPost('${post.slug.current}')" class="read-more-btn">Read More</a>
                 </div>
             </div>
         `;
@@ -661,12 +664,22 @@ async function checkForBlogPost() {
     
     if (postId) {
         try {
+            // First try to find in Sanity blog posts
+            const sanityPosts = await getBlogPosts();
+            const sanityPost = sanityPosts.find(p => p.slug.current === postId && p.publishedAt);
+            
+            if (sanityPost) {
+                displaySingleSanityBlogPost(sanityPost);
+                return;
+            }
+            
+            // If not found in Sanity, try JSON blog posts
             const response = await fetch('./blog-data.json');
             const blogData = await response.json();
-            const post = blogData.posts.find(p => p.id === postId && p.published);
+            const jsonPost = blogData.posts.find(p => p.id === postId && p.published);
             
-            if (post) {
-                displaySingleBlogPost(post);
+            if (jsonPost) {
+                displaySingleBlogPost(jsonPost);
             }
         } catch (error) {
             console.error('Error loading blog post:', error);
@@ -842,4 +855,90 @@ function showSuccessMessage() {
     setTimeout(() => {
         successMsg.remove();
     }, 5000);
+}
+
+// Function to show a specific Sanity blog post
+async function showSanityBlogPost(postSlug) {
+    try {
+        const posts = await getBlogPosts();
+        const post = posts.find(p => p.slug.current === postSlug && p.publishedAt);
+        
+        if (post) {
+            // Update URL with post parameter
+            const url = new URL(window.location);
+            url.searchParams.set('post', postSlug);
+            window.history.pushState({}, `${post.title} - Death Doula Nicole`, url);
+            
+            // Display the blog post
+            displaySingleSanityBlogPost(post);
+        }
+    } catch (error) {
+        console.error('Error loading Sanity blog post:', error);
+    }
+}
+
+// Display single Sanity blog post
+function displaySingleSanityBlogPost(post) {
+    const formattedDate = new Date(post.publishedAt).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+    
+    // Hide all main page sections
+    const sectionsToHide = ['hero', 'about', 'services', 'blog', 'resources', 'faq', 'contact'];
+    sectionsToHide.forEach(sectionId => {
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.style.display = 'none';
+        }
+    });
+    
+    // Create or update blog post container
+    let blogPostContainer = document.getElementById('blog-post-container');
+    if (!blogPostContainer) {
+        blogPostContainer = document.createElement('div');
+        blogPostContainer.id = 'blog-post-container';
+        
+        // Insert after the navigation
+        const navbar = document.querySelector('.navbar');
+        if (navbar && navbar.nextSibling) {
+            navbar.parentNode.insertBefore(blogPostContainer, navbar.nextSibling);
+        } else {
+            document.body.appendChild(blogPostContainer);
+        }
+    }
+    
+    blogPostContainer.style.display = 'block';
+    blogPostContainer.innerHTML = `
+        <article class="blog-post-single">
+            <div class="container">
+                <div class="blog-post-header">
+                    <nav class="breadcrumb">
+                        <a href="#" onclick="showHomePage()" class="back-home-btn">&larr; Back to Home</a>
+                    </nav>
+                    <h1 class="blog-post-title">${post.title}</h1>
+                    <div class="blog-post-meta">
+                        <span class="blog-post-date">${formattedDate}</span>
+                        <span class="blog-post-author">by ${post.author || 'Nicole'}</span>
+                        <span class="blog-post-category">${post.category || 'Reflections'}</span>
+                    </div>
+                </div>
+                ${post.featuredImage ? `<img src="${urlFor(post.featuredImage)}" alt="${post.title}" class="blog-post-featured-image">` : ''}
+                <div class="blog-post-content">
+                    ${blocksToHtml(post.content)}
+                </div>
+                <div class="blog-post-footer">
+                    <a href="#" onclick="showHomePage()" class="btn-primary">Back to Home</a>
+                    <a href="#" onclick="showHomePage(); setTimeout(() => { document.getElementById('contact').scrollIntoView({behavior: 'smooth'}); }, 100);" class="btn-secondary">Get in Touch</a>
+                </div>
+            </div>
+        </article>
+    `;
+    
+    // Update page title
+    document.title = `${post.title} - Death Doula Nicole`;
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
