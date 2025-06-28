@@ -464,7 +464,7 @@ p {
 
 /* Individual blog post styles */
 .blog-post-single {
-    padding: 2rem 0;
+    padding: 8rem 0 2rem;
     background: #fafafa;
     min-height: 80vh;
 }
@@ -1075,7 +1075,7 @@ textarea:focus {
 
 #blog-post-container .blog-post-single {
     background: #fafafa;
-    padding: 2rem 0;
+    padding: 8rem 0 2rem;
 }
 
 #blog-post-container .blog-post-header {
