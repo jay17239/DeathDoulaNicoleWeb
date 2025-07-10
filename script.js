@@ -18,6 +18,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('DOM Content Loaded - Starting initialization with Sanity CMS');
     
+    // Check if user just submitted the contact form
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('submitted') === 'true') {
+        // Show success message and scroll to contact section
+        setTimeout(() => {
+            showFormSubmissionSuccess();
+            document.getElementById('contact').scrollIntoView({behavior: 'smooth'});
+            // Clean up the URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }, 500);
+    }
+    
     // Make showHomePage globally available
     window.showHomePage = showHomePage;
     
@@ -170,8 +182,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (contactForm) {
             contactForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
                 const name = document.getElementById('name');
                 const email = document.getElementById('email');
                 const message = document.getElementById('message');
@@ -183,33 +193,37 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Validate name
                 if (!name.value.trim()) {
+                    e.preventDefault();
                     showError(name, 'Name is required');
                     isValid = false;
                 }
                 
                 // Validate email
                 if (!email.value.trim()) {
+                    e.preventDefault();
                     showError(email, 'Email is required');
                     isValid = false;
                 } else if (!isValidEmail(email.value)) {
+                    e.preventDefault();
                     showError(email, 'Please enter a valid email address');
                     isValid = false;
                 }
                 
                 // Validate message
                 if (!message.value.trim()) {
+                    e.preventDefault();
                     showError(message, 'Message is required');
                     isValid = false;
                 }
                 
-                if (isValid) {
-                    // Show success message
-                    showSuccessMessage();
-                    
-                    // Here you would normally submit the form
-                    // For now, we'll just reset it
-                    contactForm.reset();
+                // Only prevent submission if validation fails
+                if (!isValid) {
+                    e.preventDefault();
+                    return;
                 }
+                
+                // If validation passes, allow the form to submit to FormSubmit
+                // The form will submit normally to https://formsubmit.co/Nicole@deathdoulanicole.com
             });
         }
     } catch (error) {
@@ -902,6 +916,30 @@ function showSuccessMessage() {
     setTimeout(() => {
         successMsg.remove();
     }, 5000);
+}
+
+function showFormSubmissionSuccess() {
+    const existingMsg = document.querySelector('.submission-success-message');
+    if (existingMsg) {
+        existingMsg.remove();
+    }
+    
+    const successMsg = document.createElement('div');
+    successMsg.className = 'submission-success-message';
+    successMsg.innerHTML = `
+        <div style="background-color: #d4edda; color: #155724; padding: 1.5rem; border-radius: 8px; margin: 2rem 0; text-align: center; border: 2px solid #c3e6cb;">
+            <h4 style="margin: 0 0 0.5rem 0; color: #155724;">✓ Message Sent Successfully!</h4>
+            <p style="margin: 0;">Thank you for reaching out. I've received your message and will get back to you within 24 hours. You should also receive an auto-reply confirmation email shortly.</p>
+        </div>
+    `;
+    
+    const contactSection = document.querySelector('#contact .container');
+    contactSection.insertBefore(successMsg, contactSection.firstChild);
+    
+    // Remove success message after 10 seconds
+    setTimeout(() => {
+        successMsg.remove();
+    }, 10000);
 }
 
 // Function to show a specific Sanity blog post
