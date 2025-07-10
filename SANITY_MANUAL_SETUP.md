@@ -107,6 +107,7 @@ Create 3 FAQ documents:
    - **Section Subtitle**: "I'm here to support you with compassion and understanding"
    - **Consultation Section Title**: "Schedule Your Consultation"
    - **Consultation Description**: "The first step is always a gentle conversation. Schedule a complimentary consultation to discuss your needs and how I can support you."
+   - **Calendly URL**: Your actual Calendly scheduling link (e.g., "https://calendly.com/your-username")
    - **Email Address**: Your actual email
    - **Phone Number**: Your actual phone number
    - **Service Area**: "Northeast Ohio"

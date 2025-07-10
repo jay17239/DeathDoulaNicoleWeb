@@ -437,6 +437,42 @@ function updateContactSection(data) {
     if (consultationTitle && data.consultationTitle) consultationTitle.textContent = data.consultationTitle;
     if (consultationDesc && data.consultationDescription) consultationDesc.textContent = data.consultationDescription;
     
+    // Update Calendly URL if provided
+    if (data.calendlyUrl) {
+        const calendlyWidget = document.querySelector('.calendly-inline-widget');
+        if (calendlyWidget) {
+            calendlyWidget.setAttribute('data-url', data.calendlyUrl);
+            
+            // Load Calendly script if not already loaded
+            if (!document.querySelector('script[src*="calendly.com"]')) {
+                const script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = 'https://assets.calendly.com/assets/external/widget.js';
+                script.onload = () => {
+                    console.log('Calendly script loaded successfully');
+                    // Initialize Calendly widget after script loads
+                    if (window.Calendly) {
+                        window.Calendly.initInlineWidget({
+                            url: data.calendlyUrl,
+                            parentElement: calendlyWidget
+                        });
+                    }
+                };
+                document.head.appendChild(script);
+            } else {
+                // Script already loaded, just reinitialize
+                if (window.Calendly) {
+                    // Clear existing widget content
+                    calendlyWidget.innerHTML = '';
+                    window.Calendly.initInlineWidget({
+                        url: data.calendlyUrl,
+                        parentElement: calendlyWidget
+                    });
+                }
+            }
+        }
+    }
+    
     // Update contact details
     const emailLink = document.querySelector('.contact-item a[href^="mailto:"]');
     const phoneLink = document.querySelector('.contact-item a[href^="tel:"]');

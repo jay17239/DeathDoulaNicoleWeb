@@ -139,6 +139,13 @@ node initialize-sanity-data.js
 2. Update email, phone, or service area
 3. Publish changes
 
+### Updating Your Calendly Link
+1. Go to "Contact Information" in Sanity
+2. Find the "Calendly URL" field
+3. Enter your complete Calendly scheduling link (e.g., "https://calendly.com/your-username/consultation")
+4. Publish changes
+5. The Calendly widget on your website will automatically update with your new link
+
 ### Adding a New Service
 1. Click "Create" → "Service"
 2. Add title, description, and icon

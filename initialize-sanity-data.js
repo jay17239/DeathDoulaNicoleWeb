@@ -173,6 +173,7 @@ const contactData = {
   sectionSubtitle: 'I\'m here to support you with compassion and understanding',
   consultationTitle: 'Schedule Your Consultation',
   consultationDescription: 'The first step is always a gentle conversation. Schedule a complimentary consultation to discuss your needs and how I can support you.',
+  calendlyUrl: 'https://calendly.com/your-calendly-username',
   email: 'nicole@example.com',
   phone: '(123) 456-7890',
   serviceArea: 'Northeast Ohio'
