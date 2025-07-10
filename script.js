@@ -439,7 +439,7 @@ function updateContactSection(data) {
     
     // Update Calendly URL if provided
     if (data.calendlyUrl) {
-        const calendlyWidget = document.querySelector('.calendly-inline-widget');
+        const calendlyWidget = document.querySelector('.calendly-widget');
         const calendlyLoading = document.querySelector('.calendly-loading');
         
         if (calendlyWidget) {
