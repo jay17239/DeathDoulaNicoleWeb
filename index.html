@@ -245,7 +245,12 @@
                     <!-- Alternative: Inline Calendly Widget -->
                     <!-- Uncomment below and comment out the button above for inline scheduling -->
                     
-                    <div class="calendly-inline-widget" data-url="https://calendly.com/your-calendly-username" style="min-width:320px;height:700px;"></div>
+                    <div class="calendly-widget-container">
+                        <div class="calendly-loading" style="min-width:320px;height:700px;display:flex;align-items:center;justify-content:center;background-color:#f8f9fa;border:1px solid #dee2e6;border-radius:8px;">
+                            <p>Loading scheduling calendar...</p>
+                        </div>
+                        <div class="calendly-inline-widget" data-url="" style="min-width:320px;height:700px;display:none;"></div>
+                    </div>
                     <!-- Calendly script will be loaded by our main script -->
                     
                     <div class="contact-details">

@@ -440,7 +440,10 @@ function updateContactSection(data) {
     // Update Calendly URL if provided
     if (data.calendlyUrl) {
         const calendlyWidget = document.querySelector('.calendly-inline-widget');
+        const calendlyLoading = document.querySelector('.calendly-loading');
+        
         if (calendlyWidget) {
+            // Update the data-url attribute
             calendlyWidget.setAttribute('data-url', data.calendlyUrl);
             
             // Load Calendly script if not already loaded
@@ -450,6 +453,10 @@ function updateContactSection(data) {
                 script.src = 'https://assets.calendly.com/assets/external/widget.js';
                 script.onload = () => {
                     console.log('Calendly script loaded successfully');
+                    // Hide loading message and show widget
+                    if (calendlyLoading) calendlyLoading.style.display = 'none';
+                    calendlyWidget.style.display = 'block';
+                    
                     // Initialize Calendly widget after script loads
                     if (window.Calendly) {
                         window.Calendly.initInlineWidget({
@@ -462,7 +469,11 @@ function updateContactSection(data) {
             } else {
                 // Script already loaded, just reinitialize
                 if (window.Calendly) {
-                    // Clear existing widget content
+                    // Hide loading message and show widget
+                    if (calendlyLoading) calendlyLoading.style.display = 'none';
+                    calendlyWidget.style.display = 'block';
+                    
+                    // Clear existing widget content and reinitialize
                     calendlyWidget.innerHTML = '';
                     window.Calendly.initInlineWidget({
                         url: data.calendlyUrl,
