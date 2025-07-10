@@ -1,5 +1,8 @@
 // Death Doula Nicole Website - Interactive Functionality with Sanity CMS Integration
 
+// Import Vercel Analytics
+import { analytics } from '@vercel/analytics';
+
 // Import Sanity client functions
 import { 
     getHeroData, 
@@ -13,6 +16,9 @@ import {
     urlFor,
     blocksToHtml
 } from './sanity-client.js';
+
+// Initialize Vercel Analytics
+analytics();
 
 document.addEventListener('DOMContentLoaded', function() {
     
