@@ -11,7 +11,8 @@ import {
     getSiteSettings, 
     getBlogPosts,
     urlFor,
-    blocksToHtml
+    blocksToHtml,
+    getTestimonials
 } from './sanity-client.js';
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -321,17 +322,18 @@ async function initializeSanityContent() {
     
     try {
         // Load all sections in parallel for better performance
-        const [heroData, aboutData, services, faqs, resourceCategories, contactData, siteSettings] = await Promise.all([
+        const [heroData, aboutData, services, faqs, resourceCategories, contactData, siteSettings, testimonials] = await Promise.all([
             getHeroData(),
             getAboutData(), 
             getServices(),
             getFAQs(),
             getResourceCategories(),
             getContactData(),
-            getSiteSettings()
+            getSiteSettings(),
+            getTestimonials()
         ]);
         
-        console.log('Sanity data loaded:', { heroData, aboutData, services, faqs, resourceCategories, contactData, siteSettings });
+        console.log('Sanity data loaded:', { heroData, aboutData, services, faqs, resourceCategories, contactData, siteSettings, testimonials });
         
         // Update each section
         if (heroData) updateHeroSection(heroData);
@@ -339,11 +341,57 @@ async function initializeSanityContent() {
         if (services && services.length > 0) updateServicesSection(services);
         if (faqs && faqs.length > 0) updateFAQSection(faqs);
         if (resourceCategories && resourceCategories.length > 0) updateResourcesSection(resourceCategories);
+        if (testimonials && testimonials.length > 0) updateTestimonialsSection(testimonials);
         if (contactData) updateContactSection(contactData);
         if (siteSettings) updateSiteSettings(siteSettings);
         
     } catch (error) {
         console.error('Error loading Sanity content:', error);
+    }
+}
+
+// Update Testimonials Section
+function updateTestimonialsSection(items) {
+    const grid = document.getElementById('testimonials-grid');
+    if (!grid) return;
+    grid.innerHTML = items.map(item => {
+        const quote = item.quote || item.text || '';
+        const author = item.author || item.name || '';
+        const meta = item.meta || item.relation || item.location || '';
+        return `
+            <div class="testimonial-card">
+                <p class="testimonial-quote">${quote}</p>
+                ${author ? `<div class="testimonial-author">${author}</div>` : ''}
+                ${meta ? `<div class="testimonial-meta">${meta}</div>` : ''}
+            </div>
+        `;
+    }).join('');
+
+    // Animate in (local observer)
+    try {
+        const localObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        const cards = grid.querySelectorAll('.testimonial-card');
+        cards.forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            localObserver.observe(el);
+        });
+    } catch (e) {
+        // If IntersectionObserver not supported, simply show cards
+        const cards = grid.querySelectorAll('.testimonial-card');
+        cards.forEach(el => {
+            el.style.opacity = '1';
+            el.style.transform = 'none';
+        });
     }
 }
 

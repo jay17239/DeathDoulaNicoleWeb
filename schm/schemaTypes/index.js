@@ -6,6 +6,7 @@ import faq from './faq'
 import resourceCategory from './resourceCategory'
 import contact from './contact'
 import siteSettings from './siteSettings'
+import testimonial from './testimonial'
 
 export const schemaTypes = [
   // Site-wide settings
@@ -18,6 +19,7 @@ export const schemaTypes = [
   faq,
   resourceCategory,
   contact,
+  testimonial,
   
   // Content types
   blog

@@ -55,6 +55,12 @@ export async function getBlogPosts() {
   return await client.fetch(query)
 }
 
+// Testimonials
+export async function getTestimonials() {
+  const query = '*[_type == "testimonial"] | order(order asc, _createdAt desc)'
+  return await client.fetch(query)
+}
+
 // Helper function to convert Sanity block content to HTML
 export function blocksToHtml(blocks) {
   if (!blocks) return ''
