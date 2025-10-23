@@ -487,6 +487,24 @@ function updateResourcesSection(resourceCategories) {
     `).join('');
 }
 
+// Inline SVG icons for social platforms
+function getSocialIconSVG(platform) {
+    const p = (platform || '').toLowerCase();
+    if (p === 'facebook') {
+        return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M22.675 0h-21.35C.597 0 0 .597 0 1.326v21.348C0 23.403.597 24 1.326 24h11.49v-9.294H9.691V11.01h3.125V8.413c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.463.099 2.794.143v3.24h-1.918c-1.504 0-1.796.715-1.796 1.763v2.314h3.59l-.467 3.696h-3.123V24h6.127C23.403 24 24 23.403 24 22.674V1.326C24 .597 23.403 0 22.675 0z"></path></svg>';
+    }
+    if (p === 'instagram') {
+        return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.35 3.608 1.325.975.975 1.263 2.242 1.325 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.35 2.633-1.325 3.608-.975.975-2.242 1.263-3.608 1.325-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.35-3.608-1.325-.975-.975-1.263-2.242-1.325-3.608C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.07-4.85c.062-1.366.35-2.633 1.325-3.608C4.533 2.583 5.8 2.295 7.166 2.233 8.432 2.175 8.812 2.163 12 2.163zm0 1.837c-3.17 0-3.548.012-4.796.07-1.02.047-1.577.216-1.945.385-.49.213-.84.468-1.209.837-.369.369-.624.719-.837 1.209-.169.368-.338.925-.385 1.945-.058 1.248-.07 1.626-.07 4.796s.012 3.548.07 4.796c.047 1.02.216 1.577.385 1.945.213.49.468.84.837 1.209.369.369.719.624 1.209.837.368.169.925.338 1.945.385 1.248.058 1.626.07 4.796.07s3.548-.012 4.796-.07c1.02-.047 1.577-.216 1.945-.385.49-.213.84-.468 1.209-.837.369-.369.624-.719.837-1.209.169-.368.338-.925.385-1.945.058-1.248.07-1.626.07-4.796s-.012-3.548-.07-4.796c-.047-1.02-.216-1.577-.385-1.945-.213-.49-.468-.84-.837-1.209-.369-.369-.719-.624-1.209-.837-.368-.169-.925-.338-1.945-.385-1.248-.058-1.626-.07-4.796-.07zm0 3.838a5.162 5.162 0 1 1 0 10.324 5.162 5.162 0 0 1 0-10.324zm0 1.837a3.324 3.324 0 1 0 0 6.648 3.324 3.324 0 0 0 0-6.648zm4.906-3.205a1.2 1.2 0 1 1 0 2.399 1.2 1.2 0 0 1 0-2.4z"></path></svg>';
+    }
+    if (p === 'linkedin') {
+        return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M20.447 20.452H17.2v-5.569c0-1.328-.026-3.037-1.852-3.037-1.853 0-2.137 1.447-2.137 2.943v5.663h-3.245V9h3.116v1.561h.045c.434-.823 1.494-1.69 3.073-1.69 3.289 0 3.895 2.165 3.895 4.982v6.599zM5.337 7.433a1.882 1.882 0 1 1 0-3.764 1.882 1.882 0 0 1 0 3.764zM6.954 20.452H3.72V9h3.234v11.452z"></path></svg>';
+    }
+    if (p === 'twitter' || p === 'x') {
+        return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M23.954 4.569c-.885.392-1.83.656-2.825.775 1.014-.611 1.794-1.577 2.163-2.724-.949.564-2.005.974-3.127 1.196-.897-.957-2.178-1.555-3.594-1.555-2.723 0-4.932 2.208-4.932 4.932 0 .386.045.763.127 1.124-4.096-.205-7.73-2.169-10.164-5.153-.424.729-.666 1.577-.666 2.476 0 1.708.87 3.215 2.191 4.099-.807-.026-1.566-.248-2.229-.616v.061c0 2.385 1.693 4.374 3.946 4.828-.413.112-.849.171-1.296.171-.314 0-.615-.03-.916-.086.631 1.953 2.445 3.377 4.6 3.416-1.68 1.318-3.809 2.106-6.102 2.106-.395 0-.779-.023-1.17-.067 2.189 1.402 4.768 2.22 7.557 2.22 9.054 0 14.009-7.496 14.009-13.986 0-.213 0-.425-.016-.637.961-.695 1.8-1.562 2.46-2.549z"></path></svg>';
+    }
+    return '<svg viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"></path></svg>';
+}
+
 // Update Contact Section
 function updateContactSection(data) {
     const sectionTitle = document.querySelector('#contact .section-title');
@@ -561,6 +579,41 @@ function updateContactSection(data) {
     }
     if (serviceAreaSpan && data.serviceArea) {
         serviceAreaSpan.nextSibling.textContent = ` ${data.serviceArea}`;
+    }
+
+    // Update social links from Sanity (preserve existing hardcoded SVG icons)
+    const socialLinksContainer = document.querySelector('.social-links');
+    if (socialLinksContainer && Array.isArray(data.socialLinks) && data.socialLinks.length > 0) {
+        const anchors = socialLinksContainer.querySelectorAll('a.social-link');
+        const anchorByPlatform = {};
+        anchors.forEach(a => {
+            ['facebook','instagram','linkedin','twitter','x'].forEach(p => {
+                if (a.classList.contains(p)) anchorByPlatform[p] = a;
+            });
+        });
+
+        data.socialLinks.forEach(item => {
+            const platform = (item.platform || '').toLowerCase();
+            const url = item.url || '#';
+            const a = anchorByPlatform[platform];
+            if (a) {
+                a.href = url;
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+            } else {
+                // If a platform doesn't exist in markup, append with correct SVG
+                const label = platform ? platform.charAt(0).toUpperCase() + platform.slice(1) : 'Social';
+                const svg = getSocialIconSVG(platform);
+                const newA = document.createElement('a');
+                newA.className = `social-link ${platform}`;
+                newA.href = url;
+                newA.target = '_blank';
+                newA.rel = 'noopener noreferrer';
+                newA.setAttribute('aria-label', label);
+                newA.innerHTML = svg;
+                socialLinksContainer.appendChild(newA);
+            }
+        });
     }
 }
 

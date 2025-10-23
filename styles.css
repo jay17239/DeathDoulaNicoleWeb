@@ -851,18 +851,34 @@ p {
 }
 
 .social-link {
-    display: inline-block;
-    padding: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
     background-color: var(--cream);
     border-radius: 50%;
     text-decoration: none;
-    font-size: 1.5rem;
     transition: var(--transition);
+    color: var(--primary-brown);
 }
 
 .social-link:hover {
-    background-color: var(--primary-brown);
+    background-color: #f0f0f0;
     transform: translateY(-3px);
+    color: inherit;
+}
+
+.social-link svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+    display: block;
+    transition: var(--transition);
+}
+
+.social-link:hover svg {
+    fill: currentColor;
 }
 
 /* Contact Form */
